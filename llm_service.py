@@ -8,7 +8,7 @@ class LLMService:
             raise ValueError("GEMINI_API_KEY not found in environment variables")
         
         self.client = genai.Client(api_key=api_key)
-        self.model_name = 'gemini-2.0-flash'
+        self.model_name = 'gemini-2.5-flash'
     
     def check_connection(self):
         """Check if the LLM API is accessible"""
