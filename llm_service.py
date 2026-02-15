@@ -1,5 +1,5 @@
 import os
-import google.generativeai as genai
+from google import genai
 
 class LLMService:
     def __init__(self):
@@ -7,14 +7,17 @@ class LLMService:
         if not api_key:
             raise ValueError("GEMINI_API_KEY not found in environment variables")
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('models/gemini-2.5-flash')
+        self.client = genai.Client(api_key=api_key)
+        self.model_name = 'gemini-2.5-flash'
     
     def check_connection(self):
         """Check if the LLM API is accessible"""
         try:
             # Make a minimal API call to check connection
-            response = self.model.generate_content("test")
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents="test"
+            )
             return 'connected'
         except Exception as e:
             return f'disconnected: {str(e)}'
@@ -27,7 +30,10 @@ class LLMService:
 Text to clean:
 {text}"""
             
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt
+            )
             return response.text.strip()
         except Exception as e:
             raise Exception(f"Error cleaning text: {str(e)}")
@@ -40,7 +46,10 @@ Text to clean:
 Text to summarize:
 {text}"""
             
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt
+            )
             return response.text.strip()
         except Exception as e:
             raise Exception(f"Error summarizing text: {str(e)}")
@@ -53,7 +62,10 @@ Text to summarize:
 Text to analyze:
 {text}"""
             
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt
+            )
             return response.text.strip()
         except Exception as e:
             raise Exception(f"Error extracting key points: {str(e)}")
@@ -66,7 +78,10 @@ Text to analyze:
 Text to categorize:
 {text}"""
             
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt
+            )
             return response.text.strip()
         except Exception as e:
             raise Exception(f"Error tagging category: {str(e)}")
